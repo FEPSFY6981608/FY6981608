@@ -79,5 +79,44 @@ classifier confidence to drop, as in Vlachos (2008)
 
    <h3 id="Analysis and discussion">Analysis and discussion</h3>
    
+<div id="last-updated">Loading last update time...</div>
+
+<button onclick="verifyLastUpdatedTime()" style=!"display: block; margin: 10px auto; padding: 8px 16px;">
+  Verify Last Modified Time
+</button>
+
+<script>
+    async function getLastUpdatedTime() {
+      const username = 'FEPSFY6981608';
+      const repo = 'FY6981608';
+
+      const url = 'https://api.github.com/repos/${username}/${repo}/commits';
+
+      try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/vnd.github.v3+json',
+            }
+          });
+          if (!response.ok) {
+              throw new Error('Error fetching data: ${response.status} - ${response.statusText}');
+          }
+          const commits = await response.json();
+          if (commits && commits.length > 0) {
+              const lastCommitDate = new Date(commits[0].commit.committer.date);
+
+              document.getElementById('last-updated').innerText = 'Error fetching update time. Please check the repository details.';
+          }
+      }
+
+      async function verifyLastUpdatedTime() {
+          document.getElementById('last-updated').innerText = 'Verifying...';
+          await getLastUpdatedTime();
+          alert("Last modified time has been successfully verified from GitHub API.");
+      }
+
+      window.onload=getLastUpdatedTime;
+</script>
    
 </html>
